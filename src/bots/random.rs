@@ -6,17 +6,23 @@ use crate::{
     game::{Game, Turn},
 };
 
-pub struct RandomBot;
+pub struct RandomBot {
+    radius: i32,
+    n: String,
+}
 
 impl RandomBot {
-    pub fn new() -> Self {
-        Self
+    pub fn new(radius: i32) -> Self {
+        Self {
+            radius,
+            n: format!("random:{}", radius),
+        }
     }
 }
 
 impl Bot for RandomBot {
     fn name(&self) -> &str {
-        "random"
+        &self.n
     }
 
     fn choose(&mut self, game: &Game, player: Cell) -> Turn {
@@ -24,18 +30,24 @@ impl Bot for RandomBot {
         assert!(candidates.len() >= 2);
 
         // select winning moves first
-        if let Some(&win_hex ) = candidates
+        if let Some(&win_hex) = candidates
             .iter()
-            .find(|&&h | game.board.is_winning_move(h, player))
+            .find(|&&h| game.board.is_winning_move(h, player))
         {
             // Pick any other legal cell as the second placement.
-            let second = candidates
-                .iter()
-                .find(|&&h | h != win_hex)
-                .copied()
-                .unwrap();
+            let second = candidates.iter().find(|&&h| h != win_hex).copied().unwrap();
             return Turn::Two(win_hex, second);
         }
+
+        // filter candidates by radius from any other cell
+        if self.radius >= 0 {
+            candidates.retain(|&h| {
+                game.board
+                    .cells()
+                    .any(|(c, _)| h.distance(&c) <= self.radius)
+            });
+        }
+        assert!(candidates.len() >= 2);
 
         let mut r = rand::rng();
 

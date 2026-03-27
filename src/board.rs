@@ -1,10 +1,9 @@
-use std::collections::{HashMap, HashSet};
+use rustc_hash::{FxHashMap, FxHashSet};
 
 use crate::coords::Hex;
 
 pub const WIN_LENGTH: i32 = 6;
 pub const MAX_PLACE_DIST: i32 = 8;
-pub const NEARBY_RADIUS: i32 = 2;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Cell {
@@ -32,17 +31,17 @@ impl std::fmt::Display for Cell {
 
 #[derive(Clone, Debug)]
 pub struct Board {
-    cells: HashMap<Hex, Cell>,
-    occupied: HashSet<Hex>,
-    candidates: HashSet<Hex>,
+    cells: FxHashMap<Hex, Cell>,
+    occupied: FxHashSet<Hex>,
+    candidates: FxHashSet<Hex>,
 }
 
 impl Board {
     pub fn new() -> Self {
         Board {
-            cells: HashMap::new(),
-            occupied: HashSet::new(),
-            candidates: HashSet::new(),
+            cells: FxHashMap::default(),
+            occupied: FxHashSet::default(),
+            candidates: FxHashSet::default(),
         }
     }
 

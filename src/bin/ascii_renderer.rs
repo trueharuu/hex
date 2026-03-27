@@ -98,19 +98,19 @@ fn print_board(map: &HashMap<Hex, char>) {
                 match ch {
                     'X' => {
                         if winners.contains(&h) {
-                            "\x1b[31mX\x1b[0m" // bold red X
+                            "\x1b[1;31mX\x1b[0m" // bold red X
                         } else {
-                            "\x1b[2;31mX\x1b[0m"
+                            "\x1b[31mX\x1b[0m"
                         }
                     }
                     'O' => {
                         if winners.contains(&h) {
-                            "\x1b[34mO\x1b[0m" // bold blue O
+                            "\x1b[1;34mO\x1b[0m" // bold blue O
                         } else {
-                            "\x1b[2;34mO\x1b[0m"
+                            "\x1b[34mO\x1b[0m"
                         }
                     }
-                    '.' => "\x1b[2;30m.\x1b[0m",
+                    '.' => "\x1b[30m \x1b[0m",
                     _ => "?",
                 }
             };
